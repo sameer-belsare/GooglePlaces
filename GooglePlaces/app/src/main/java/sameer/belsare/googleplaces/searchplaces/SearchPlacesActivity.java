@@ -1,9 +1,11 @@
-package sameer.belsare.googleplaces;
+package sameer.belsare.googleplaces.searchplaces;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class SearchPlaces extends AppCompatActivity {
+import sameer.belsare.googleplaces.R;
+
+public class SearchPlacesActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
