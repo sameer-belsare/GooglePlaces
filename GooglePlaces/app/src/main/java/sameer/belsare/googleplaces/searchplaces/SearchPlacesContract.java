@@ -13,13 +13,13 @@ public interface SearchPlacesContract {
 
     }
 
-    interface SearchPlacesPresentor extends View.OnClickListener {
+    interface SearchPlacesPresentor {
 
         void setView(SearchPlacesView view);
 
-        void invokePlaceSelector();
+        void startPlaceSelector();
 
-        void handleactivityResult(int requestCode, int resultCode, Intent data);
+        void handleActivityResult(int requestCode, int resultCode, Intent data);
 
     }
 }

@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">GooglePlaces</string>
+    <string name="msg_permission_denied">Please grant all the required permission</string>
 </resources>
