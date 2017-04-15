@@ -7,6 +7,7 @@ import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -16,7 +17,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 
 import okhttp3.Interceptor;
@@ -120,37 +120,38 @@ public class PlaceDetailsPresenter implements PlaceDetailsContract.PlaceDetailsP
         });
     }
 
-    public void saveImageToFile(String photoUri){
-        Bitmap theBitmap = null;
-        try {
-            theBitmap = Glide.
-                    with(mView.getActivity()).
-                    load(photoUri).
-                    asBitmap().
-                    into(-1, -1).
-                    get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-
-        String extStorageDirectory = Environment.getExternalStorageDirectory().toString();
-        String filename = mPhotoUris.size()+".png";
-        File file = new File(extStorageDirectory, filename);
-        if (file.exists()) {
-            file.delete();
-            file = new File(extStorageDirectory, filename);
-        }
-        try {
-            OutputStream outStream = new FileOutputStream(file);
-            theBitmap.compress(Bitmap.CompressFormat.PNG, 100, outStream);
-            outStream.flush();
-            outStream.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void saveImageToFile(final String photoUri) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Bitmap theBitmap = null;
+                try {
+                    theBitmap = Glide.
+                            with(mView.getActivity()).
+                            load(photoUri).
+                            asBitmap().
+                            into(-1, -1).
+                            get();
+                    String extStorageDirectory = Environment.getExternalStorageDirectory().toString();
+                    String filename = System.currentTimeMillis() + ".png";
+                    File file = new File(extStorageDirectory, filename);
+                    if (file.exists()) {
+                        file.delete();
+                        file = new File(extStorageDirectory, filename);
+                    }
+                    OutputStream outStream = new FileOutputStream(file);
+                    theBitmap.compress(Bitmap.CompressFormat.PNG, 100, outStream);
+                    outStream.flush();
+                    outStream.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+        Toast.makeText(mView.getActivity(), mView.getString(R.string.photo_downloaded), Toast.LENGTH_SHORT).show();
     }
+
+
 
     @Override
     public void handleItemClick(int position) {
