@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import sameer.belsare.googleplaces.Constants;
 import sameer.belsare.googleplaces.R;
 import sameer.belsare.googleplaces.databinding.FragmentSearchPlacesBinding;
 
@@ -51,25 +50,38 @@ public class SearchPlacesFragment extends Fragment implements SearchPlacesContra
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == Constants.PERMISSION_REQUEST_ACCESS_LOCATION) {
-            if (grantResults.length > 0
-                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                mPresenter.startPlaceSelector();
-            } else {
-                if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
-                        permissions[0])) {
-                    Toast.makeText(getActivity(), getString(R.string.msg_permission_denied), Toast.LENGTH_SHORT).show();
-                } else {
-                    Snackbar snackBar = Snackbar.make(mFragmentSearchPlacesBinding.getRoot(), getString(R.string.enable_permission),
-                            Snackbar.LENGTH_LONG);
-                    snackBar.setAction(R.string.action_enable, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            mActivityReference.launchApplicationSetting(mActivityReference);
-                        }
-                    });
-                    snackBar.show();
+        boolean result = true;
+        if (grantResults.length > 0) {
+            for (int permission : grantResults) {
+                if (permission != PackageManager.PERMISSION_GRANTED) {
+                    result = false;
+                    break;
                 }
+            }
+        }
+        if (grantResults.length > 0 && result) {
+            mPresenter.startPlaceSelector();
+        } else {
+            boolean permissionResult = true;
+            for (String permission : permissions) {
+
+                if (ActivityCompat.shouldShowRequestPermissionRationale(mActivityReference, permission)) {
+                    permissionResult = false;
+                    break;
+                }
+            }
+            if (!permissionResult) {
+                Toast.makeText(getActivity(), getString(R.string.msg_permission_denied), Toast.LENGTH_SHORT).show();
+            } else {
+                Snackbar snackBar = Snackbar.make(mFragmentSearchPlacesBinding.getRoot(), getString(R.string.enable_permission),
+                        Snackbar.LENGTH_LONG);
+                snackBar.setAction(R.string.action_enable, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        mActivityReference.launchApplicationSetting(mActivityReference);
+                    }
+                });
+                snackBar.show();
             }
         }
     }

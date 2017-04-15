@@ -14,11 +14,12 @@ public class PlaceDetailsContract {
 
     interface PlaceDetailsPresenter extends LocationListener {
 
-        void setViewAndData(PlaceDetailsView view, String id);
+        void setViewAndData(PlaceDetailsView view, String latLng);
 
         void loadPlacePhotos();
 
         void handleActivityResult(int requestCode, int resultCode, Intent data);
 
+        void handleItemClick(int position);
     }
 }

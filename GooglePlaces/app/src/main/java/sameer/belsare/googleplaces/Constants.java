@@ -5,5 +5,5 @@ package sameer.belsare.googleplaces;
  */
 
 public class Constants {
-    public static final int PERMISSION_REQUEST_ACCESS_LOCATION = 100;
+    public static final int PERMISSION_REQUEST = 100;
 }

@@ -19,10 +19,10 @@ public class PlaceDetailsActivity extends BaseActivity {
         PlaceDetailsFragment addEditTaskFragment =
                 (PlaceDetailsFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
 
-        String placeId = getIntent().getStringExtra("placeID");
+        String latLng = getIntent().getStringExtra("latLng");
         if (addEditTaskFragment == null) {
             PlaceDetailsFragment placeDetailsFragment = new PlaceDetailsFragment();
-            placeDetailsFragment.setID(placeId);
+            placeDetailsFragment.setLatLng(latLng);
             addFragmentSupport(placeDetailsFragment, false, R.id.contentFrame, PlaceDetailsFragment.class.getSimpleName(), false);
         }
     }

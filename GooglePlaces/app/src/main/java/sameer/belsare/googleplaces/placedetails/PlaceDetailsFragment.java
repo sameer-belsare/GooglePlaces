@@ -31,7 +31,7 @@ import static android.content.Context.LOCATION_SERVICE;
 
 public class PlaceDetailsFragment extends Fragment implements PlaceDetailsContract.PlaceDetailsView, OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener {
     private FragmentPlaceDetailsBinding mFragmentPlaceDetailsBinding;
-    private String mPlaceId;
+    private String mLatLng;
     private PlaceDetailsActivity mActivityReference;
     private PlaceDetailsPresenter mPresenter;
     private GoogleMap mMap;
@@ -41,6 +41,7 @@ public class PlaceDetailsFragment extends Fragment implements PlaceDetailsContra
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mFragmentPlaceDetailsBinding = DataBindingUtil.inflate(inflater,
                 R.layout.fragment_place_details, container, false);
+        init();
         return mFragmentPlaceDetailsBinding.getRoot();
     }
 
@@ -48,7 +49,6 @@ public class PlaceDetailsFragment extends Fragment implements PlaceDetailsContra
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mActivityReference = (PlaceDetailsActivity) getActivity();
-        init();
     }
 
     private void init() {
@@ -62,12 +62,13 @@ public class PlaceDetailsFragment extends Fragment implements PlaceDetailsContra
         gridLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         mFragmentPlaceDetailsBinding.rvPhotos.setLayoutManager(gridLayoutManager);
 
-        mPresenter.setViewAndData(this, mPlaceId);
-        //mFragmentPlaceDetailsBinding.rvPhotos.setAdapter(mPresenter.getAdaptor());
+        mPresenter.setViewAndData(this, mLatLng);
+        mFragmentPlaceDetailsBinding.rvPhotos.setAdapter(mPresenter.getAdaptor());
+        mPresenter.loadPlacePhotos();
     }
 
-    public void setID(String id) {
-        this.mPlaceId = id;
+    public void setLatLng(String latLng) {
+        mLatLng = latLng;
     }
 
     @Override
@@ -99,7 +100,7 @@ public class PlaceDetailsFragment extends Fragment implements PlaceDetailsContra
         boolean checkNetwork = locationManager
                 .isProviderEnabled(LocationManager.NETWORK_PROVIDER);
         if (!checkGPS && !checkNetwork) {
-            Toast.makeText(mActivityReference, "No Service Provider Available", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mActivityReference, getString(R.string.no_service_available), Toast.LENGTH_SHORT).show();
         } else {
             if (checkNetwork) {
                 try {
@@ -122,7 +123,6 @@ public class PlaceDetailsFragment extends Fragment implements PlaceDetailsContra
             }
         }
         if (checkGPS) {
-            Toast.makeText(mActivityReference, "GPS", Toast.LENGTH_SHORT).show();
             if (location == null) {
                 try {
                     locationManager.requestLocationUpdates(

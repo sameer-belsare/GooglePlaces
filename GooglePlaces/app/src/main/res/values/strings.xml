@@ -4,4 +4,5 @@
     <string name="enable_permission">Please enable required permissions from Application settings</string>
     <string name="action_enable">Enable</string>
     <string name="api_key">AIzaSyCi0SdgSdQxQIYWkDq3fN2ySPuNFGrpNyY</string>
+    <string name="no_service_available">No Service Provider Available</string>
 </resources>

@@ -17,6 +17,10 @@ import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+import com.google.android.gms.maps.model.LatLng;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import sameer.belsare.googleplaces.Constants;
 import sameer.belsare.googleplaces.R;
@@ -56,25 +60,37 @@ public class SearchPlacesPresenter implements SearchPlacesContract.SearchPlacesP
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.search:
-                checkLocationPermission();
+                checkPermissions();
                 break;
         }
     }
 
-    private void checkLocationPermission() {
+    private void checkPermissions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            int result = ContextCompat.checkSelfPermission(mActivity,
-                    Manifest.permission.ACCESS_FINE_LOCATION);
-            if (result == PackageManager.PERMISSION_GRANTED) {
+            if (checkPermissions(
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE})) {
                 startPlaceSelector();
-            } else {
-                ActivityCompat.requestPermissions(mActivity,
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        Constants.PERMISSION_REQUEST_ACCESS_LOCATION);
             }
         } else {
             startPlaceSelector();
         }
+    }
+
+    public boolean checkPermissions(String[] permissions) {
+        int result;
+        List<String> listPermissionsNeeded = new ArrayList<>();
+        for (String p : permissions) {
+            result = ContextCompat.checkSelfPermission(mActivity, p);
+            if (result != PackageManager.PERMISSION_GRANTED) {
+                listPermissionsNeeded.add(p);
+            }
+        }
+        if (!listPermissionsNeeded.isEmpty()) {
+            ActivityCompat.requestPermissions(mActivity, listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]), Constants.PERMISSION_REQUEST);
+            return false;
+        }
+        return true;
     }
 
     @Override
@@ -85,7 +101,8 @@ public class SearchPlacesPresenter implements SearchPlacesContract.SearchPlacesP
                 Log.i(TAG, "Place: " + place.getName());
                 Intent intent = new Intent(mView.getContext(), PlaceDetailsActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra("placeID", place.getId());
+                LatLng latLng = place.getLatLng();
+                intent.putExtra("latLng", latLng.latitude+","+latLng.longitude);
                 mView.getContext().startActivity(intent);
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                 Status status = PlaceAutocomplete.getStatus(mActivity, data);
