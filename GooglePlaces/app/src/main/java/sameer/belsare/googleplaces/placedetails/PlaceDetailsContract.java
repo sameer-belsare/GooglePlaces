@@ -1,6 +1,5 @@
 package sameer.belsare.googleplaces.placedetails;
 
-import android.content.Intent;
 import android.location.LocationListener;
 
 /**
@@ -17,8 +16,6 @@ public class PlaceDetailsContract {
         void setViewAndData(PlaceDetailsView view, String latLng);
 
         void loadPlacePhotos();
-
-        void handleActivityResult(int requestCode, int resultCode, Intent data);
 
         void handleItemClick(int position);
     }

@@ -1,6 +1,5 @@
 package sameer.belsare.googleplaces.placedetails;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.location.Location;
 import android.os.Bundle;
@@ -156,11 +155,6 @@ public class PlaceDetailsPresenter implements PlaceDetailsContract.PlaceDetailsP
     @Override
     public void handleItemClick(int position) {
         saveImageToFile(mPhotoUris.get(position));
-    }
-
-    @Override
-    public void handleActivityResult(int requestCode, int resultCode, Intent data) {
-
     }
 
     @Override
