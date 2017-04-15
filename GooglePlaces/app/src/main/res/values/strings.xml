@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">GooglePlaces</string>
     <string name="msg_permission_denied">Please grant all the required permission</string>
+    <string name="enable_permission">Please enable required permissions from Application settings</string>
+    <string name="action_enable">Enable</string>
+    <string name="api_key">AIzaSyCi0SdgSdQxQIYWkDq3fN2ySPuNFGrpNyY</string>
 </resources>
