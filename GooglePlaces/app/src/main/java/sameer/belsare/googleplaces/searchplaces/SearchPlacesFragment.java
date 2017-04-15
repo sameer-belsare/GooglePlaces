@@ -23,16 +23,9 @@ import sameer.belsare.googleplaces.databinding.FragmentSearchPlacesBinding;
  */
 
 public class SearchPlacesFragment extends Fragment implements SearchPlacesContract.SearchPlacesView {
-    private SearchPlacesPresenter mPresentor;
+    private SearchPlacesPresenter mPresenter;
     private SearchPlacesActivity mActivityReference;
     private FragmentSearchPlacesBinding mFragmentSearchPlacesBinding;
-
-    public SearchPlacesFragment() {
-    }
-
-    public static SearchPlacesFragment newInstance() {
-        return new SearchPlacesFragment();
-    }
 
     @Nullable
     @Override
@@ -46,14 +39,14 @@ public class SearchPlacesFragment extends Fragment implements SearchPlacesContra
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mActivityReference = (SearchPlacesActivity) getActivity();
-        mPresentor = new SearchPlacesPresenter();
-        mPresentor.setView(this);
-        mFragmentSearchPlacesBinding.search.setOnClickListener(mPresentor);
+        mPresenter = new SearchPlacesPresenter();
+        mPresenter.setView(this);
+        mFragmentSearchPlacesBinding.search.setOnClickListener(mPresenter);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        mPresentor.handleActivityResult(requestCode, resultCode, data);
+        mPresenter.handleActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -61,7 +54,7 @@ public class SearchPlacesFragment extends Fragment implements SearchPlacesContra
         if (requestCode == Constants.PERMISSION_REQUEST_ACCESS_LOCATION) {
             if (grantResults.length > 0
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                mPresentor.startPlaceSelector();
+                mPresenter.startPlaceSelector();
             } else {
                 if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
                         permissions[0])) {
